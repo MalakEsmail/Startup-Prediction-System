@@ -31,6 +31,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     '10.0.2.2', #needed for Android emulator
+    '127.0.0.1',
     'localhost'
 ]
 
@@ -52,6 +53,7 @@ INSTALLED_APPS = [
     'message_control',
     'rest_framework_simplejwt.token_blacklist',
     'posts',
+    'profiles',
     'location_field.apps.DefaultConfig',
 ]
 
@@ -92,13 +94,22 @@ WSGI_APPLICATION = 'blogy.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'sps',
-        'USER':'postgres',
-        'PASSWORD':'password',
-        'HOST': 'localhost',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'sups',
+#         'USER':'postgres',
+#         'PASSWORD':'password',
+#         'HOST': 'localhost',
+#     }
+# }
 
 
 # Password validation

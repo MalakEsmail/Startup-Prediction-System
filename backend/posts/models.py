@@ -9,6 +9,9 @@ from django.contrib.postgres.fields import ArrayField
 def rand_slug():
     return ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(6))
 
+def upload_to(instance, filename):
+    return 'posts/{filename}'.format(filename=filename)
+
 
 class Category(models.Model):
     name = models.CharField(max_length=50)
@@ -21,17 +24,22 @@ class Category(models.Model):
 
 
 class Post(models.Model):
-    user = models.ForeignKey("accounts.CustomUser", related_name="user", on_delete=models.CASCADE)
+    user = models.ForeignKey("accounts.CustomUser", related_name="post", on_delete=models.CASCADE)
+    profile = models.ForeignKey("profiles.Profile",related_name='profile', on_delete=models.CASCADE)
     title = models.CharField(max_length=50)
     content = models.TextField()
     excerpt = models.TextField()
-    slug = models.SlugField(max_length=200,null=False, blank= True, unique=True)
-    likes = models.ManyToManyField("accounts.CustomUser", related_name= 'likes')
+    image = models.ImageField( upload_to=upload_to, default = 'def.png')
+    slug = models.SlugField(max_length=200,null=True, blank= True, unique=True)
+    likes = models.ManyToManyField("accounts.CustomUser", related_name= 'likes', blank=True)
     featured = models.BooleanField(default = False)
     created_at = models.DateTimeField( default= timezone.now)
 
     def __str__(self):
         return self.title
+    
+    def number_of_likes(self):
+        return self.likes.count()
 
 
     def save(self, *args, **kwargs):
@@ -55,11 +63,14 @@ class Comment(models.Model):
 
 
 class Dataset(models.Model):
-    post = models.ForeignKey(Post , related_name= 'post', on_delete=models.CASCADE)
-    category= models.ForeignKey(Category, related_name='category', on_delete=models.CASCADE, null = True)
-    country = models.CharField( max_length=50)
-    state = models.CharField( max_length=50)
-    fund = models.FloatField()
-    fund_round = models.IntegerField()
+    user = models.ForeignKey("accounts.CustomUser" , on_delete=models.CASCADE)
+    category_list= models.CharField( max_length=50)
+    country_code = models.CharField( max_length=50)
+    funding_total_usd = models.FloatField()
+    funding_rounds = models.IntegerField()
+    score=models.FloatField()
+    maxfund=models.FloatField()
+    minfund=models.FloatField()
+    status=models.BooleanField()
 
 
