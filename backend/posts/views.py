@@ -9,6 +9,9 @@ from rest_framework.permissions import AllowAny
 from rest_framework.authtoken.views import APIView
 from rest_framework.response import Response
 from rest_framework import permissions,status as  statu
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
+
 import json
 import pandas as pd
 import joblib
@@ -98,6 +101,8 @@ class AddPostDataset(APIView):
            json_obj = serializer.data
            return Response(json_obj, status=statu.HTTP_201_CREATED)
         return Response(serializer.errors, status=statu.HTTP_400_BAD_REQUEST)
+    
+    
 
     
 
